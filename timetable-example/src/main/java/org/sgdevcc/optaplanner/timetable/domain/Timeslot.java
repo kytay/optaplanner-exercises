@@ -1,5 +1,8 @@
 package org.sgdevcc.optaplanner.timetable.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
@@ -9,7 +12,7 @@ public class Timeslot {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    public Timeslot() {
+    private Timeslot() {
         // stub
     }
 
@@ -50,5 +53,27 @@ public class Timeslot {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Timeslot timeslot = (Timeslot) o;
+
+        return new EqualsBuilder()
+                .append(dayOfWeek, timeslot.dayOfWeek)
+                .append(startTime, timeslot.startTime)
+                .append(endTime, timeslot.endTime).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(dayOfWeek)
+                .append(startTime)
+                .append(endTime).toHashCode();
     }
 }
