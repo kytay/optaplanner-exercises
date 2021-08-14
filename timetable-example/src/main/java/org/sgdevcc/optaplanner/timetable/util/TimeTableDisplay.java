@@ -5,6 +5,7 @@ import org.sgdevcc.optaplanner.timetable.domain.Room;
 import org.sgdevcc.optaplanner.timetable.domain.TimeTable;
 import org.sgdevcc.optaplanner.timetable.domain.Timeslot;
 
+import java.time.DayOfWeek;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +22,23 @@ public class TimeTableDisplay {
             @Override
             public int compare(Timeslot timeslot, Timeslot t1) {
 
-                if(timeslot.getStartTime() == t1.getStartTime())
-                {
-                    return timeslot.getDayOfWeek().compareTo(t1.getDayOfWeek());
-                }
-                else
+                if(timeslot.getDayOfWeek() == t1.getDayOfWeek())
                 {
                     return timeslot.getStartTime().compareTo(t1.getStartTime());
                 }
+                else
+                {
+                    return timeslot.getDayOfWeek().compareTo(t1.getDayOfWeek());
+                }
+
+//                if(timeslot.getStartTime() == t1.getStartTime())
+//                {
+//                    return timeslot.getDayOfWeek().compareTo(t1.getDayOfWeek());
+//                }
+//                else
+//                {
+//                    return timeslot.getStartTime().compareTo(t1.getStartTime());
+//                }
             }
         });
 
@@ -60,6 +70,28 @@ public class TimeTableDisplay {
         }
 
         // print
+
+        for(Room room: roomList)
+        {
+            DayOfWeek currentCursor = null;
+            System.out.println("Room: " + room.toString());
+
+            Map<Timeslot, Lesson> lessonStack = tableByRoom.get(room);
+            for(Timeslot timeslot: timeslotList)
+            {
+                Lesson tmpLesson = lessonStack.get(timeslot);
+                if(tmpLesson == null)
+                    continue;
+                else {
+                    if(timeslot.getDayOfWeek() != currentCursor) {
+                        System.out.println("Day: " + timeslot.getDayOfWeek().toString());
+                        currentCursor = timeslot.getDayOfWeek();
+                    }
+                    System.out.println(tmpLesson.toString());
+                }
+            }
+        }
+
         System.out.println();
     }
 
