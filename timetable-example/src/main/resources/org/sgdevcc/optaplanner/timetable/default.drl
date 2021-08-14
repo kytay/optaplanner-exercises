@@ -1,0 +1,49 @@
+package org.sgdevcc.optaplanner.timetable;
+
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder;
+import java.time.LocalTime;
+import org.sgdevcc.optaplanner.timetable.domain.*;
+
+global HardSoftScoreHolder scoreHolder;
+
+rule "A room can accomodate at most one lesson at the same time"
+    when
+        Lesson($id1: id, $room1: room, $time1: timeslot, $time1 != null)
+        Lesson(id != $id1, timeslot == $time1, room == $room1)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "A teacher can teach at most one lesson at the same time"
+    when
+        Lesson($id1: id, $teacher1: teacher, $time1: timeslot, $time1 != null)
+        Lesson(id != $id1, teacher == $teacher1, timeslot == $time1)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "A student can attend at most one lesson at the same time"
+    when
+        Lesson($id1: id, $student1: studentGroup, $time1: timeslot, $time1 != null)
+        Lesson(id != $id1, studentGroup == $student1, timeslot == $time1)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "A student never takes the same subject more than once in a day"
+    when
+        Lesson($id1: id, $student1: studentGroup, $subject1: subject, $time1: timeslot, $time1 != null)
+        Lesson(id != $id1, studentGroup == $student1, $time2: timeslot, $time2 != null,
+        $time2.dayOfWeek == $time1.dayOfWeek, subject == $subject1)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "A teacher prefer to teach in the same room in a day"
+    when
+        Lesson($id1: id, $teacher1: teacher, $room1: room, $time1: timeslot, $time1 != null)
+        Lesson(id != $id1, teacher == $teacher1, $time2: timeslot, $time2 != null,
+        $time2.dayOfWeek == $time1.dayOfWeek, $time1.startTime > $time2.startTime, room != $room1)
+    then
+        scoreHolder.addSoftConstraintMatch(kcontext, -1);
+end
