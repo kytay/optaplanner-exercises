@@ -15,7 +15,7 @@ public class OtherPopulationUtil {
 
         List<Room> listOfRooms = new ArrayList<>();
 
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 4; i++)
         {
             Room room = new Room("Room #" + i);
             listOfRooms.add(room);

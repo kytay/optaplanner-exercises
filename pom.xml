@@ -11,6 +11,7 @@
 
     <modules>
         <module>timetable-example</module>
+        <module>sudoku-solver</module>
     </modules>
 
     <parent>

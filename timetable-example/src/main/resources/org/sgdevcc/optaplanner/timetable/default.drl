@@ -6,6 +6,15 @@ import org.sgdevcc.optaplanner.timetable.domain.*;
 
 global HardSoftScoreHolder scoreHolder;
 
+rule "When a lesson is in conflict with another lesson."
+    when
+        Lesson($id1: id, $room1: room, $time1: timeslot, $time1 != null)
+        $lesson: Lesson(id != $id1, timeslot == $time1, room == $room1)
+    then
+//        $lesson.setRoom(null);
+//        $lesson.setTimeslot(null);
+end
+
 rule "A room can accomodate at most one lesson at the same time"
     when
         Lesson($id1: id, $room1: room, $time1: timeslot, $time1 != null)
